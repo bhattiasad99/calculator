@@ -11,47 +11,45 @@ const Calculator = (props) => {
     const [output, setOutput] = useState(0)
     const [operation, setOperation] = useState(null)
 
-    // button handler
-    const btnClickHandler = (e) => {
-        e.preventDefault()
-        const selectedButton = buttons.find(button => (button.id === +e.target.id))
+    // Large function for calculator buttons logic
+    const btnFunctionality = (event) => {
         // dont exceed maximum digits
-        if (output.length > 15 && selectedButton.type === 'digit') {
+        if (output.length > 15 && event.type === 'digit') {
             return
         }
         // set operation state
-        if (selectedButton.type === 'operator') {
-            setOperation(selectedButton.value)
+        if (event.type === 'operator') {
+            setOperation(event.value)
             // no functionality set
         }
         // set output on screen
-        if (selectedButton.type === 'digit') {
+        if (event.type === 'digit') {
             // if output is 0 replace the digit
             if (output === 0) {
                 // UNLESS the digit is the decimal. Then do it like this ==> 0.something
-                if (selectedButton.value === '.') {
-                    setOutput(String(output) + selectedButton.value)
+                if (event.value === '.') {
+                    setOutput(String(output) + event.value)
                     return
                 }
-                setOutput(selectedButton.value)
+                setOutput(event.value)
             }
             else {
                 // fixed error: single number digit does not convert to array, convert to string before converting to arr
-                if (selectedButton.value === '.' && String(output).split('').includes('.')) {
+                if (event.value === '.' && String(output).split('').includes('.')) {
                     return
                 }
-                setOutput(String(output) + String(selectedButton.value))
+                setOutput(String(output) + String(event.value))
             }
         }
         // set calculator functions
-        if (selectedButton.type === 'function') {
+        if (event.type === 'function') {
             // clear button
-            if (selectedButton.name === 'clear') {
+            if (event.name === 'clear') {
                 setOutput(0)
                 setOperation(null)
             }
             // correct button
-            if (selectedButton.name === 'correct') {
+            if (event.name === 'correct') {
                 // if nothing to correct
                 if (output === 0) {
                     setOperation(null)
@@ -73,13 +71,33 @@ const Calculator = (props) => {
         }
     }
 
+    // button handler
+    const btnClickHandler = (e) => {
+        e.preventDefault()
+        const selectedButton = buttons.find(button => (button.id === +e.target.id))
+        btnFunctionality(selectedButton)
+    }
+
+    // key press handler
+    const keyPressHandler = e => {
+        e.preventDefault();
+        const selectedKey = buttons.find(button => (button.keyTrigger === e.key))
+        if (selectedKey) {
+            btnFunctionality(selectedKey)
+        }
+    }
+
     return (
         <div className={styles.calculator}>
             <Screen operation={operation} output={output} />
             <div className={styles.buttons}>
                 {buttons.map(button => {
                     return (
-                        <Button key={button.id} {...button} clicked={btnClickHandler} />
+                        <Button
+                            key={button.id}
+                            clicked={btnClickHandler}
+                            buttonPressed={keyPressHandler}
+                            {...button} />
                     )
                 })}
             </div>

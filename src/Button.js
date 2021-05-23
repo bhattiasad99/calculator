@@ -4,7 +4,7 @@ const Button = (props) => {
     // console.log(props)
     return (
         <div className={styles.buttonContainer}>
-            <button className={styles.button} onClick={props.clicked} id={props.id}>
+            <button className={styles.button} onClick={props.clicked} id={props.id} onKeyDown={props.buttonPressed}>
                 {props.value}
             </button>
         </div>
