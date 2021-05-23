@@ -1,0 +1,20 @@
+.operation {
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.output {
+    max-width: 90%;
+}
+
+.screen {
+    background: #eaeaea;
+    height: auto;
+    width: 96%;
+    padding: 6px;
+    border-radius: 10px;
+    border: 2px solid black;
+    text-align: right;
+    display: flex;
+    justify-content: space-between;
+}
